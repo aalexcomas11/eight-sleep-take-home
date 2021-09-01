@@ -1,14 +1,25 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 import SleepSessionStore from './store/SleepSessionStore'
 import DashboardHome from './page/DashboardHome';
 import './App.css';
 
 function App() {
+
   return (
     <div className="App">
       <SleepSessionStore>
-        <DashboardHome />
+        <Router>
+          <Switch>
+            <Route path="/" exact component={DashboardHome} />
+            <Route path="/user" exact component={DashboardHome} />
+          </Switch>
+        </Router>
       </SleepSessionStore>
     </div>
   );

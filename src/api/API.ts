@@ -23,7 +23,6 @@ export default class API {
       ...this.defaultConfig,
       ...config
     }
-    console.log('config: ', config)
     this.api = axios.create(this.config)
   }
 

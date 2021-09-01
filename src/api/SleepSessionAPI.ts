@@ -1,10 +1,13 @@
+import { AxiosResponse } from 'axios'
+
 import API from './API'
+import { SleepSessions } from './types'
 
 class SleepSessionAPI extends API{
   /**
    * Get sleep sessions for all users
    */
-  getSleepSession(id: string) {
+  getSleepSession(id: string): Promise<AxiosResponse<SleepSessions>>{
     return this.client(`/eight-public/challenge/${id}.json`)
   }
 }
