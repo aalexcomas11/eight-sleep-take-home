@@ -2,19 +2,21 @@ import React, { useState, createContext } from 'react'
 
 import SleepSessionAPI from '../api/SleepSessionAPI'
 import {StoreStatus} from './types'
-import { SleepSessionsMap } from '../api/types'
+import { SleepSessions, SleepSessionsMap } from '../api/types'
 
 
 export interface SleepSessionContextProps{
   sessions: SleepSessionsMap,
   status: StoreStatus,
   getUserSessions: (userIds: Array<string>) => Promise<SleepSessionsMap>
+  getUserSession: (id: string) => Promise<SleepSessions | {}>
 }
 
 export const SleepSessionContext = createContext<SleepSessionContextProps>({
   sessions: {},
   status: StoreStatus.LOADING,
-  getUserSessions: async (userIds: Array<string>) => { return {} }
+  getUserSessions: async (userIds: Array<string>) => { return {} },
+  getUserSession: async (id: string) => { return {} }
 })
 
 export interface SleepSessionStoreProps{
@@ -38,9 +40,7 @@ const SleepSessionStore = ({
       of the demo and return empty array
     */
     const sessions = resp
-      .filter((session) => {
-      return !session.error
-      }).reduce((acc, curr) => {
+      .reduce((acc, curr) => {
         acc[curr.id] = curr
         return acc
       }, {})
@@ -48,6 +48,21 @@ const SleepSessionStore = ({
     setSessions(sessions)
     setStatus(StoreStatus.READY)
     return sessions
+  }
+
+  const getUserSession = async (id: string): Promise<SleepSessionsMap> => {
+    setStatus(StoreStatus.LOADING)
+    const session = await _getUserSession(id)
+    return new Promise((resolve) => {
+      setSessions((sessions) => {
+        const sesh = { ...sessions }
+        sesh[id] = session
+        setStatus(StoreStatus.READY)
+        resolve(sesh)
+        return sesh
+      })
+    })
+    
   }
 
   const _getUserSession = (id: string) => {
@@ -67,6 +82,7 @@ const SleepSessionStore = ({
     <SleepSessionContext.Provider value={{
       status,
       sessions,
+      getUserSession,
       getUserSessions
     }}>
       {children}

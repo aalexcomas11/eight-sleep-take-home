@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react'
-import { RouteComponentProps} from 'react-router-dom'
+import { RouteComponentProps, Link} from 'react-router-dom'
 
+import UserCell from '../../components/UserCell'
 import {StoreStatus} from '../../store/types'
 import {
   SleepSessionContext
@@ -9,7 +10,7 @@ import {
 export interface DashboardHomeProps extends RouteComponentProps{
 
 }
-const DashboardHome = (props: RouteComponentProps) => {
+const   DashboardHome = (props: RouteComponentProps) => {
   const store = useContext(SleepSessionContext)
 
   useEffect(() => {
@@ -20,8 +21,7 @@ const DashboardHome = (props: RouteComponentProps) => {
     ])
   }, [])
 
-
-  if (StoreStatus.LOADING) {
+  if (store.status === StoreStatus.LOADING) {
     return (
       <div>
         ...loading
@@ -29,10 +29,25 @@ const DashboardHome = (props: RouteComponentProps) => {
     )
   }
 
-  if (StoreStatus.READY) {
+  if (store.status === StoreStatus.READY) {
     return (
-      <div>
-        Ready bro
+      <div className={`
+        p-8
+        flex
+        justify-center
+        items-start
+        mx-auto
+      `}>
+        {
+          Object.keys(store.sessions)
+            .map((userID) => {
+              return (
+                <Link to={`/sleepSession/user/${userID}`}>
+                  <UserCell initials={'AC'} />
+                </Link>
+              )
+            })
+        }
       </div>
     )
   }
