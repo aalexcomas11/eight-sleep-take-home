@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import { RouteComponentProps} from 'react-router-dom'
 
+import {StoreStatus} from '../../store/types'
 import {
   SleepSessionContext
-} from '../store/SleepSessionStore'
+} from '../../store/SleepSessionStore'
 
 export interface DashboardHomeProps extends RouteComponentProps{
 
@@ -20,9 +21,25 @@ const DashboardHome = (props: RouteComponentProps) => {
   }, [])
 
 
+  if (StoreStatus.LOADING) {
+    return (
+      <div>
+        ...loading
+      </div>
+    )
+  }
+
+  if (StoreStatus.READY) {
+    return (
+      <div>
+        Ready bro
+      </div>
+    )
+  }
+
   return (
     <div>
-      sessions
+      Nothing to see here
     </div>
   )
 }

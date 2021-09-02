@@ -7,6 +7,8 @@ import {
 
 import SleepSessionStore from './store/SleepSessionStore'
 import DashboardHome from './page/DashboardHome';
+import UserDashboard from './page/UserDashboard';
+
 import './App.css';
 
 function App() {
@@ -17,7 +19,7 @@ function App() {
         <Router>
           <Switch>
             <Route path="/" exact component={DashboardHome} />
-            <Route path="/user" exact component={DashboardHome} />
+            <Route path="/sleepSession/user/:userID" exact component={UserDashboard} />
           </Switch>
         </Router>
       </SleepSessionStore>

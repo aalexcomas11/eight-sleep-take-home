@@ -1,16 +1,19 @@
-import React, { useState, createContext, useEffect } from 'react'
+import React, { useState, createContext } from 'react'
 
 import SleepSessionAPI from '../api/SleepSessionAPI'
+import {StoreStatus} from './types'
 import { SleepSessionsMap } from '../api/types'
 
 
 export interface SleepSessionContextProps{
-  sessions: any,
+  sessions: SleepSessionsMap,
+  status: StoreStatus,
   getUserSessions: (userIds: Array<string>) => Promise<SleepSessionsMap>
 }
 
 export const SleepSessionContext = createContext<SleepSessionContextProps>({
   sessions: {},
+  status: StoreStatus.LOADING,
   getUserSessions: async (userIds: Array<string>) => { return {} }
 })
 
@@ -22,6 +25,7 @@ const SleepSessionStore = ({
   children
 }: SleepSessionStoreProps) => {
   const [sessions, setSessions] = useState<SleepSessionsMap>({})
+  const [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING)
 
   
   
@@ -42,6 +46,7 @@ const SleepSessionStore = ({
       }, {})
     
     setSessions(sessions)
+    setStatus(StoreStatus.READY)
     return sessions
   }
 
@@ -60,6 +65,7 @@ const SleepSessionStore = ({
 
   return (
     <SleepSessionContext.Provider value={{
+      status,
       sessions,
       getUserSessions
     }}>
